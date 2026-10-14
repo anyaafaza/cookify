@@ -7,6 +7,7 @@ import 'core/theme/theme_controller.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'shared/widgets/main_navigation.dart';
+import 'core/utils/route_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,7 @@ class CookifyApp extends StatelessWidget {
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeController.themeMode,
+            navigatorObservers: [routeObserver],
             initialRoute: '/splash',
             routes: {
               '/splash': (context) => const SplashScreen(),

@@ -13,10 +13,10 @@ class FavoritePage extends StatefulWidget {
   const FavoritePage({super.key});
 
   @override
-  State<FavoritePage> createState() => _FavoritePageState();
+  State<FavoritePage> createState() => FavoritePageState();
 }
 
-class _FavoritePageState extends State<FavoritePage> {
+class FavoritePageState extends State<FavoritePage> {
   List<Recipe> _favorites = [];
   bool _isLoading = true;
   ViewMode _viewMode = ViewMode.grid;
@@ -27,18 +27,31 @@ class _FavoritePageState extends State<FavoritePage> {
     _loadFavorites();
   }
 
+  Future<void> refresh() async {
+    await _loadFavorites();
+  }
+
   Future<void> _loadFavorites() async {
     setState(() => _isLoading = true);
 
-    final ids = await FavoriteService.getFavoriteIds();
-    final favs =
-        dummyRecipes.where((recipe) => ids.contains(recipe.id)).toList();
+    try {
+      final ids = await FavoriteService.getFavoriteIds();
+      debugPrint('>>> IDs: $ids');
 
-    if (mounted) {
-      setState(() {
-        _favorites = favs;
-        _isLoading = false;
-      });
+      final favs =
+          dummyRecipes.where((recipe) => ids.contains(recipe.id)).toList();
+      debugPrint('>>> Favs count: ${favs.length}');
+
+      if (mounted) {
+        setState(() {
+          _favorites = favs;
+          _isLoading = false;
+        });
+      }
+      debugPrint('>>> _loadFavorites SELESAI');
+    } catch (e) {
+      debugPrint('>>> ERROR: $e');
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -122,9 +135,13 @@ class _FavoritePageState extends State<FavoritePage> {
                     ? const Center(child: CircularProgressIndicator())
                     : _favorites.isEmpty
                         ? _buildEmptyState(textPrimary, textSecondary)
-                        : _viewMode == ViewMode.grid
-                            ? _buildGrid()
-                            : _buildList(),
+                        : RefreshIndicator(
+                            onRefresh: _loadFavorites,
+                            color: AppColors.primary,
+                            child: _viewMode == ViewMode.grid
+                                ? _buildGrid()
+                                : _buildList(),
+                          ),
               ),
             ],
           ),
@@ -172,6 +189,7 @@ class _FavoritePageState extends State<FavoritePage> {
   Widget _buildGrid() {
     return GridView.builder(
       padding: const EdgeInsets.all(16),
+      physics: const AlwaysScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 190,
         childAspectRatio: 0.85,
@@ -200,6 +218,7 @@ class _FavoritePageState extends State<FavoritePage> {
   Widget _buildList() {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
+      physics: const AlwaysScrollableScrollPhysics(),
       itemCount: _favorites.length,
       itemBuilder: (context, i) => RecipeCardList(
         recipe: _favorites[i],

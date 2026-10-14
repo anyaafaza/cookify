@@ -21,14 +21,17 @@ class MainNavigation extends StatefulWidget {
 
 class MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
-  int _unreadNotifications = 0; // ← TAMBAH state
+  int _unreadNotifications = 0;
 
-  final List<Widget> _pages = const [
-    HomePage(),
-    RecipeListPage(),
-    SearchPage(),
-    FavoritePage(),
-    ProfilePage(),
+  final GlobalKey<FavoritePageState> _favoriteKey =
+      GlobalKey<FavoritePageState>();
+
+  late final List<Widget> _pages = [
+    const HomePage(),
+    const RecipeListPage(),
+    const SearchPage(),
+    FavoritePage(key: _favoriteKey),
+    const ProfilePage(),
   ];
 
   // TAMBAH
@@ -50,12 +53,20 @@ class MainNavigationState extends State<MainNavigation> {
   void goToTab(int index) {
     if (index >= 0 && index < _pages.length) {
       setState(() => _currentIndex = index);
+      _refreshIfNeeded(index);
     }
   }
 
-  // UPDATE
   void _onTabTapped(int index) {
     setState(() => _currentIndex = index);
+    _refreshIfNeeded(index);
+  }
+
+  // UPDATE
+  void _refreshIfNeeded(int index) {
+    if (index == 3) {
+      _favoriteKey.currentState?.refresh();
+    }
     if (index == 4) {
       _loadUnreadCount();
     }
