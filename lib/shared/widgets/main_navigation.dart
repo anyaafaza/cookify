@@ -26,12 +26,14 @@ class MainNavigationState extends State<MainNavigation> {
   final GlobalKey<FavoritePageState> _favoriteKey =
       GlobalKey<FavoritePageState>();
 
+  final GlobalKey<ProfilePageState> _profileKey = GlobalKey<ProfilePageState>();
+
   late final List<Widget> _pages = [
     const HomePage(),
     const RecipeListPage(),
     const SearchPage(),
     FavoritePage(key: _favoriteKey),
-    const ProfilePage(),
+    ProfilePage(key: _profileKey),
   ];
 
   // TAMBAH
@@ -69,6 +71,7 @@ class MainNavigationState extends State<MainNavigation> {
     }
     if (index == 4) {
       _loadUnreadCount();
+      _profileKey.currentState?.refresh();
     }
   }
 

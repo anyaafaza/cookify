@@ -18,15 +18,19 @@ class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfilePage> createState() => ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class ProfilePageState extends State<ProfilePage> {
   String _userName = 'Pengguna Cookify';
   String _userEmail = 'user@cookify.id';
   int _favoriteCount = 0;
   int _reviewCount = 0;
   bool _isLoading = true;
+
+  Future<void> refresh() async {
+    await _loadUserData();
+  }
 
   @override
   void initState() {
