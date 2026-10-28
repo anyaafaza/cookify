@@ -154,7 +154,7 @@ class RecipeCard extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -179,7 +179,7 @@ class RecipeCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Text(
                     recipe.title,
                     maxLines: 2,
@@ -244,7 +244,7 @@ class RecipeCardGrid extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             AspectRatio(
-              aspectRatio: 16 / 10,
+              aspectRatio: 16 / 9,
               child: Stack(
                 children: [
                   Positioned.fill(
@@ -348,7 +348,7 @@ class RecipeCardGrid extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -373,7 +373,7 @@ class RecipeCardGrid extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Text(
                     recipe.title,
                     maxLines: 2,
@@ -382,11 +382,11 @@ class RecipeCardGrid extends StatelessWidget {
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                       fontFamily: 'Poppins',
-                      height: 1.3,
+                      height: 1.2,
                       color: textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
                       RatingStars(rating: recipe.rating, size: 11),

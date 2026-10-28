@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  http: ^1.0.0
   google_fonts: ^6.1.0 
   image_picker: ^1.0.5
   share_plus: ^7.2.1

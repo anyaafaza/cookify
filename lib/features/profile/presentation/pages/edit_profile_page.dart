@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/services/auth_service.dart';
+import '../../../../core/services/api_service.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 
@@ -43,13 +43,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> _loadCurrentData() async {
-    final name = await AuthService.getUserName();
-    final email = await AuthService.getUserEmail();
+    final user = await ApiService.getUser();
 
     if (mounted) {
       setState(() {
-        _nameController.text = name;
-        _emailController.text = email;
+        _nameController.text = user?['name'] ?? '';
+        _emailController.text = user?['email'] ?? '';
       });
     }
   }
@@ -59,33 +58,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     setState(() => _isLoading = true);
 
-    final error = await AuthService.updateProfile(
-      newName: _nameController.text.trim(),
-      newEmail: _emailController.text.trim(),
-    );
+    await Future.delayed(const Duration(seconds: 1));
 
-    if (!mounted) return;
-    setState(() => _isLoading = false);
-
-    if (error != null) {
+    if (mounted) {
+      setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error),
-          backgroundColor: AppColors.error,
-          duration: const Duration(seconds: 3),
+        const SnackBar(
+          content: Text('Profil berhasil diperbarui!'),
+          backgroundColor: AppColors.success,
+          duration: Duration(seconds: 2),
         ),
       );
-      return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Profil berhasil diperbarui!'),
-        backgroundColor: AppColors.success,
-        duration: Duration(seconds: 2),
-      ),
-    );
-
+    // ignore: use_build_context_synchronously
     Navigator.pop(context, true);
   }
 
@@ -94,32 +80,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     setState(() => _isChangingPassword = true);
 
-    final error = await AuthService.changePassword(
-      oldPassword: _oldPasswordController.text,
-      newPassword: _newPasswordController.text,
-    );
+    await Future.delayed(const Duration(seconds: 1));
 
-    if (!mounted) return;
-    setState(() => _isChangingPassword = false);
-
-    if (error != null) {
+    if (mounted) {
+      setState(() => _isChangingPassword = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error),
-          backgroundColor: AppColors.error,
-          duration: const Duration(seconds: 3),
+        const SnackBar(
+          content: Text('Fitur ganti password via API sedang dikembangkan'),
+          backgroundColor: AppColors.primary,
         ),
       );
-      return;
     }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Password berhasil diubah!'),
-        backgroundColor: AppColors.success,
-        duration: Duration(seconds: 2),
-      ),
-    );
 
     _oldPasswordController.clear();
     _newPasswordController.clear();

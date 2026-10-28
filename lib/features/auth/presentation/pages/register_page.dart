@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/services/auth_service.dart';
+import '../../../../core/services/api_service.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/services/notification_service.dart';
@@ -32,7 +32,10 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> _handleRegister() async {
+    FocusScope.of(context).unfocus();
+
     if (!_formKey.currentState!.validate()) return;
+
     if (!_agreeTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -45,7 +48,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     setState(() => _isLoading = true);
 
-    final error = await AuthService.register(
+    final result = await ApiService.register(
       name: _nameController.text.trim(),
       email: _emailController.text.trim(),
       password: _passwordController.text,
@@ -55,11 +58,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
     setState(() => _isLoading = false);
 
-    if (error != null) {
+    if (result['success'] != true) {
       // Registrasi gagal
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error),
+          content: Text(result['message'] ?? 'Registrasi gagal'),
           backgroundColor: AppColors.error,
           duration: const Duration(seconds: 3),
         ),

@@ -243,7 +243,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 190,
-        childAspectRatio: 0.85,
+        childAspectRatio: 0.95,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),

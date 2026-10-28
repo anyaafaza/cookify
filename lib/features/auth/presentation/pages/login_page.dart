@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/services/auth_service.dart';
+import '../../../../core/services/api_service.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../shared/widgets/main_navigation.dart';
@@ -28,11 +28,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _handleLogin() async {
+    FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
 
-    final error = await AuthService.login(
+    final result = await ApiService.login(
       email: _emailController.text.trim(),
       password: _passwordController.text,
     );
@@ -40,11 +41,11 @@ class _LoginPageState extends State<LoginPage> {
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    if (error != null) {
+    if (result['success'] != true) {
       // Login gagal
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error),
+          content: Text(result['message'] ?? 'Login gagal'),
           backgroundColor: AppColors.error,
           duration: const Duration(seconds: 3),
         ),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'core/services/auth_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_controller.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'shared/widgets/main_navigation.dart';
 import 'core/utils/route_observer.dart';
+import 'core/services/api_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _checkSession() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    final isLoggedIn = await AuthService.isLoggedIn();
+    final isLoggedIn = await ApiService.isLoggedIn();
 
     if (mounted) {
       if (isLoggedIn) {

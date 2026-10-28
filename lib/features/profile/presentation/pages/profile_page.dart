@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/services/auth_service.dart';
+import '../../../../core/services/api_service.dart';
 import '../../../../core/services/favorite_service.dart';
-import '../../../../core/services/review_service.dart';
 import '../../../../core/theme/theme_controller.dart';
 import '../../../../core/widgets/cookify_logo.dart';
 import '../../../about/presentation/pages/about_page.dart';
@@ -39,15 +38,14 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _loadUserData() async {
-    final name = await AuthService.getUserName();
-    final email = await AuthService.getUserEmail();
+    final user = await ApiService.getUser();
     final favIds = await FavoriteService.getFavoriteIds();
-    final reviewCount = await ReviewService.countUserReviews(email);
+    const reviewCount = 0;
 
     if (mounted) {
       setState(() {
-        _userName = name;
-        _userEmail = email;
+        _userName = user?['name'] ?? 'Pengguna Cookify';
+        _userEmail = user?['email'] ?? 'user@cookify.id';
         _favoriteCount = favIds.length;
         _reviewCount = reviewCount;
         _isLoading = false;
@@ -123,7 +121,7 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _logout() async {
-    await AuthService.logout();
+    await ApiService.logout();
 
     if (mounted) {
       Navigator.pushAndRemoveUntil(
