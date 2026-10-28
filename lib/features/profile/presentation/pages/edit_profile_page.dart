@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/services/api_service.dart';
+import '../../../../core/services/auth_service.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 
@@ -43,12 +43,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> _loadCurrentData() async {
-    final user = await ApiService.getUser();
+    final name = await AuthService.getUserName();
+    final email = await AuthService.getUserEmail();
 
     if (mounted) {
       setState(() {
-        _nameController.text = user?['name'] ?? '';
-        _emailController.text = user?['email'] ?? '';
+        _nameController.text = name;
+        _emailController.text = email;
       });
     }
   }

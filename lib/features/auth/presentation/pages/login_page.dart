@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/services/api_service.dart';
+import '../../../../core/services/auth_service.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../shared/widgets/main_navigation.dart';
@@ -33,7 +33,8 @@ class _LoginPageState extends State<LoginPage> {
 
     setState(() => _isLoading = true);
 
-    final result = await ApiService.login(
+    // Local storage mengembalikan String? (pesan error)
+    final error = await AuthService.login(
       email: _emailController.text.trim(),
       password: _passwordController.text,
     );
@@ -41,11 +42,11 @@ class _LoginPageState extends State<LoginPage> {
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    if (result['success'] != true) {
+    if (error != null) {
       // Login gagal
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(result['message'] ?? 'Login gagal'),
+          content: Text(error),
           backgroundColor: AppColors.error,
           duration: const Duration(seconds: 3),
         ),

@@ -44,7 +44,6 @@ class Review {
 class ReviewService {
   static const String _key = 'recipe_reviews';
 
-  // AMBIL SEMUA REVIEW
   static Future<List<Review>> _getAllReviews() async {
     final prefs = await SharedPreferences.getInstance();
     final json = prefs.getStringList(_key) ?? [];
@@ -53,14 +52,12 @@ class ReviewService {
         .toList();
   }
 
-  // SIMPAN SEMUA REVIEW
   static Future<void> _saveAllReviews(List<Review> reviews) async {
     final prefs = await SharedPreferences.getInstance();
     final json = reviews.map((r) => jsonEncode(r.toJson())).toList();
     await prefs.setStringList(_key, json);
   }
 
-  // AMBIL REVIEW PER RESEP
   static Future<List<Review>> getReviewsForRecipe(String recipeId) async {
     final all = await _getAllReviews();
     final filtered = all.where((r) => r.recipeId == recipeId).toList();
@@ -68,16 +65,14 @@ class ReviewService {
     return filtered;
   }
 
-  // AMBIL REVIEW USER UNTUK RESEP
   static Future<Review?> getUserReview({
     required String recipeId,
     required String userId,
   }) async {
     final all = await _getAllReviews();
     try {
-      return all.firstWhere(
-        (r) => r.recipeId == recipeId && r.userId == userId,
-      );
+      return all
+          .firstWhere((r) => r.recipeId == recipeId && r.userId == userId);
     } catch (_) {
       return null;
     }
@@ -88,7 +83,6 @@ class ReviewService {
     return all.where((r) => r.userId == userId).length;
   }
 
-  // TAMBAH / UPDATE REVIEW
   static Future<void> addOrUpdateReview({
     required String recipeId,
     required String userId,
@@ -97,10 +91,8 @@ class ReviewService {
     required String comment,
   }) async {
     final all = await _getAllReviews();
-
-    final index = all.indexWhere(
-      (r) => r.recipeId == recipeId && r.userId == userId,
-    );
+    final index =
+        all.indexWhere((r) => r.recipeId == recipeId && r.userId == userId);
 
     if (index >= 0) {
       all[index] = Review(
@@ -123,26 +115,22 @@ class ReviewService {
         createdAt: DateTime.now(),
       ));
     }
-
     await _saveAllReviews(all);
   }
 
-  // HAPUS REVIEW
   static Future<void> deleteReview(String reviewId) async {
     final all = await _getAllReviews();
     all.removeWhere((r) => r.id == reviewId);
     await _saveAllReviews(all);
   }
 
-  // HITUNG RATA-RATA RATING
   static Future<Map<String, dynamic>> getRatingSummary(String recipeId) async {
     final reviews = await getReviewsForRecipe(recipeId);
-
     if (reviews.isEmpty) {
       return {
         'average': 0.0,
         'count': 0,
-        'distribution': {1: 0, 2: 0, 3: 0, 4: 0, 5: 0},
+        'distribution': {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
       };
     }
 
@@ -158,7 +146,7 @@ class ReviewService {
     return {
       'average': average,
       'count': reviews.length,
-      'distribution': distribution,
+      'distribution': distribution
     };
   }
 }

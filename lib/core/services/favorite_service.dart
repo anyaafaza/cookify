@@ -39,9 +39,4 @@ class FavoriteService {
       return true;
     }
   }
-
-  static Future<void> clearFavorites() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_key);
-  }
 }
